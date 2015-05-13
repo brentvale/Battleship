@@ -8,6 +8,23 @@
     <script src="javascripts/ship.js"></script>
     <script src="javascripts/game_states.js"></script>
     <style>
+    
+      .missle {
+        width: 64px;
+        height: 64px;
+        background: url("../images/missle_hang_sequence_512.png"); /*for practice launch*/
+      }
+      
+      .traveling-missle {
+        position: absolute;
+        z-index: 1;
+        height: 64px;
+        width: 64px;
+        background: url("../images/missle_hang_sequence_512.png");
+        top: 360px;
+        left: 0px;
+      }
+      
       .tile{
         width: 30px;
         height: 30px;
@@ -50,12 +67,48 @@
       #pop{
         width: 100%;
       }
+      #launch-missle {
+        background: black;
+        color: white;
+        height: 50px;
+        width:120px;
+      }
+      #practice-launch-missle {
+        background: black;
+        color: white;
+        height: 50px;
+        width:120px;
+      }
+      #practice-explode-bomb {
+        background: black;
+        color: white;
+        height: 50px;
+        width:120px;
+      }
+      .explosion {
+        height:30px;
+        width:30px;
+        background: url("../images/explosion_120_x_120.png");
+      }
+      .practice-bomb {
+        height:64px;
+        width: 64px;
+        background: url("../images/explosion.png");
+      }
 
     </style>
   </head>
   <body>
+    <div class="missle"></div>
+    <div class="traveling-missle"></div>
+    <div class="practice-bomb"></div>
+    
+    <div id="practice-launch-missle">Practice Launch</div>
+    <div id="practice-explode-bomb">Practice Bomb Expldoe</div>
+    
+    
     <h1>Battleship</h1>
-
+    <!-- <div id="launch-missle">Launch</div> -->
     <button id="pop">Populate</button>
 
     <div id="board1">
@@ -69,5 +122,6 @@
       var b = new Battleship();
       var b1 = new BattleshipUI("body", b);
     </script>
+      
   </body>
 </html>
