@@ -1,4 +1,7 @@
-function Battleship(){
+(function (root) {
+  var App = root.App = (root.App || {});
+  var Battleship = App.Battleship = function(socket){
+    
   this.shipsToPlace = this.createShips();
 }
 
@@ -20,4 +23,5 @@ Battleship.prototype = {
     ships.push(shipFive);
     return ships;
   }
-}
+  
+}(this));
