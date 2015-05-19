@@ -87,8 +87,10 @@ BattleshipMissleUI.prototype = {
     }, 50);
     
     //time for clear interval is 16 times the above interval
+    var that = this;
     window.setTimeout(function(){
-      clearInterval(explosionInterval)
+      clearInterval(explosionInterval);
+      that.socket.emit('swapTurn');
     }, 800);
   },
   practiceExplosion: function(event){

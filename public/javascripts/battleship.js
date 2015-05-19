@@ -3,7 +3,6 @@
   var Battleship = App.Battleship = function(socket){
     this.socket = socket;
     this.shipsToPlace = this.createShips();
-    this.registerHandlers();
   }
 
   Battleship.prototype = {
@@ -24,8 +23,8 @@
       ships.push(shipFive);
       return ships;
     },
-    registerHandlers: function() {
-      var 
+    handleTurnToggle: function(){
+      
     }
     
   }
