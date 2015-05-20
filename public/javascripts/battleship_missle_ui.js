@@ -68,17 +68,18 @@ BattleshipMissleUI.prototype = {
     },TOTAL_ANI_TIME * 6); // multiple of animation count
   },
   
-  loopExplosion: function(coords){
-    
-    var divToExplode = this.oppBoard[coords[0]][coords[1]];
-    $(divToExplode).addClass("explosion");
+  loopExplosion: function(params, hitSquare, message){
+    var displayMessage = message || "dontDisplay";
+    //params => {hit: true, row: row, col: col}
+    var $hitSquare = $(hitSquare);
+    $hitSquare.addClass("explosion");
     var rowCount = 0;
     var colCount = 0;
     
     var explosionInterval = window.setInterval(function(){
       //30 is the width of each image in the 120x120 16 grid sprite
       var position = (colCount*30*-1) + "px " + (rowCount*30*-1) + "px";
-      $(divToExplode).css("background-position", position);
+      $hitSquare.css("background-position", position);
       colCount += 1;
       if(colCount >= 4){ //manual setting of col width: bomb image is 4 x 4
         rowCount += 1;
@@ -90,9 +91,13 @@ BattleshipMissleUI.prototype = {
     var that = this;
     window.setTimeout(function(){
       clearInterval(explosionInterval);
-      that.socket.emit('swapTurn');
+      if(!(displayMessage === "dontDisplay")){
+        $("#game-announcement").html(displayMessage);
+      } 
+      $hitSquare.addClass("hit");
     }, 800);
   },
+  
   practiceExplosion: function(event){
     var divToExplode = $(".practice-bomb");
     var rowCount = 0;

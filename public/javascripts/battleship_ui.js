@@ -75,7 +75,8 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
         if(battleshipUI.takenPositions[takenCoords]){
           hit = true;
           var hitSquare = battleshipUI.ourBoard[coords.row][coords.col];
-          $(hitSquare).addClass("hit");
+          battleshipUI.missleUI.loopExplosion(coords, hitSquare)
+          // $(hitSquare).addClass("hit");
         } else {
           hit = false;
           var unHitSquare = battleshipUI.ourBoard[coords.row][coords.col];
@@ -86,19 +87,18 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       })
       
       this.battleship.socket.on('makeNotTurn', function(params) {
-        debugger
         $("#board2 .blueTile").off("click");
         if(params.hit){
           var hitSquare = battleshipUI.oppBoard[params.row][params.col];
-          $(hitSquare).addClass("hit");
-          $("#game-announcement").html("HIT!!!!!" + '<br>');
+          var message = "HIT!!!!!" + '<br>' + "Waiting for opponent's shot";
+          battleshipUI.missleUI.loopExplosion(params, hitSquare, message)
         } else {
           var unHitSquare = battleshipUI.oppBoard[params.row][params.col];
           $(unHitSquare).addClass("nohit");
           $("#game-announcement").html("swing and a miss..." + '<br>');
+          $("#game-announcement").append("Waiting for opponent's shot");
         }
         battleshipUI.ableToFire = false;
-        $("#game-announcement").append("Waiting for opponent's shot");
       })
       
     },
@@ -141,7 +141,7 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
     },
     placeShips: function(event){
       $("#board1 .tile").off();
-      if(this.shipCounter === 5){
+      if(this.shipCounter === 1){
         this.battleship.socket.emit("shipsPlaced");
         return;
       }
