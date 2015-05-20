@@ -21,11 +21,10 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
     // this.gameState = new GameStates();
     this.missleUI = new BattleshipMissleUI();
   
-    $("#board1 .blueTile").on("click", this.placeShips.bind(this));
-    $("#pop").on("click", this.autopopulate.bind(this));
-    $("#practice-launch-missle").on("click", this.missleUI.practiceLaunchMissle.bind(this));
-    
-    $("#practice-explode-bomb").on("click", this.missleUI.practiceExplosion.bind(this));
+    // $("#pop").on("click", this.autopopulate.bind(this));
+//     $("#practice-launch-missle").on("click", this.missleUI.practiceLaunchMissle.bind(this));
+//
+//     $("#practice-explode-bomb").on("click", this.missleUI.practiceExplosion.bind(this));
   
     this.createGrids();
     this.displayGrids();
@@ -70,7 +69,7 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       })
       
       this.battleship.socket.on('SHOT', function(coords) {
-        this.ableToFire = true;
+        battleshipUI.ableToFire = true;
         var hit;
         var takenCoords = [coords.row, coords.col];
         if(battleshipUI.takenPositions[takenCoords]){
@@ -87,6 +86,8 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       })
       
       this.battleship.socket.on('makeNotTurn', function(params) {
+        debugger
+        $("#board2 .blueTile").off("click");
         if(params.hit){
           var hitSquare = battleshipUI.oppBoard[params.row][params.col];
           $(hitSquare).addClass("hit");
@@ -96,11 +97,9 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
           $(unHitSquare).addClass("nohit");
           $("#game-announcement").html("swing and a miss..." + '<br>');
         }
-        this.ableToFire = false;
+        battleshipUI.ableToFire = false;
         $("#game-announcement").append("Waiting for opponent's shot");
       })
-      
-      
       
     },
     handleShot: function(e){
@@ -138,10 +137,11 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
           $(this.root).find("#board2").append(this.oppBoard[i][j]);
         }
       }
+      $("#board2 .blueTile").on("click", this.placeShips.bind(this));
     },
     placeShips: function(event){
       $("#board1 .tile").off();
-      if(this.shipCounter === 1){
+      if(this.shipCounter === 5){
         this.battleship.socket.emit("shipsPlaced");
         return;
       }
