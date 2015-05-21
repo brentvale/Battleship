@@ -21,14 +21,14 @@ BattleshipMissleUI.prototype = {
       clearInterval(animationInterval);
     },TOTAL_ANI_TIME*3);
   },
-  launchMissle: function(event){
+  launchMissle: function(callback){
     //getBoundingClientRect() => returns an elements absolute position on page
     //get coordinates of bombedTile
-    var bombSpot = event.currentTarget.getBoundingClientRect();
+    // var bombSpot = event.currentTarget.getBoundingClientRect();
     //launchedMissle start coords are top: 445px; left: 10px; 
     var launchedMissle = $(".traveling-missle");
-    var bombY = Math.floor(bombSpot.top) + 20;
-    var bombX = Math.floor(bombSpot.left) + 55;
+    var bombY = 300
+    var bombX = 800
   
   
     //delta Y = 445 - bombY divided by total num of frames SPRITE_IMAGE_LENGTH
@@ -51,7 +51,6 @@ BattleshipMissleUI.prototype = {
           rowCount += 1;
           colCount = 0;
         }
-        console.log(position);
       }
     
       var currentTop = launchedMissle.css("top");
@@ -64,7 +63,8 @@ BattleshipMissleUI.prototype = {
     var that = this;
     window.setTimeout(function() {
       clearInterval(animationInterval);
-      launchedMissle.css({"top": 430, "left": 10});
+      launchedMissle.css({"top": 300, "left": 10});
+      callback();
     },TOTAL_ANI_TIME * 6); // multiple of animation count
   },
   
