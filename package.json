@@ -4,7 +4,8 @@
   "description": "battleship with node socket.io and javascript",
   "main": "lib/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":  "node lib/app.js"
   },
   "author": "brent and pancham",
   "license": "ISC",
