@@ -9,130 +9,30 @@
     <script src="javascripts/battleship_missle_ui.js"></script>
     <script src="javascripts/ship.js"></script>
     <script src="javascripts/game_states.js"></script>
-    <style>
-    
-      .missle {
-        width: 64px;
-        height: 64px;
-        background: url("../images/missle_hang_sequence_512.png"); /*for practice launch*/
-      }
-      
-      .traveling-missle {
-        position: absolute;
-        z-index: 1;
-        height: 64px;
-        width: 64px;
-        background: url("../images/missle_hang_sequence_512.png");
-        top: 280px;
-        left: 0px;
-      }
-      
-      .tile{
-        width: 30px;
-        height: 30px;
-        float: left;
-        margin: 5px;
-      }
-      .tile:hover{
-        background-color:#c2c2ff;
-        
-      }
-      .blueTile{
-        background:blue;
-      }
-      .redTile{
-        background:red;
-      }
-      .greenTile{
-        background:green;
-      }
-      .gridEl{
-        float: left;
-        height: 30px;
-        width: 30px;
-        margin-top: 10px;
-      }
-      #board1 {
-        width: 400px;
-        height: 400px;
-        margin: 50px;
-        margin-top: 0px;
-        float: left;
-      }
-      #board2 {
-        width: 400px;
-        height: 400px;
-        margin: 50px;
-        margin-top: 0px;
-        float:right;
-      }
-      #pop{
-        width: 100%;
-      }
-      #launch-missle {
-        background: black;
-        color: white;
-        height: 50px;
-        width:120px;
-      }
-      #practice-launch-missle {
-        background: black;
-        color: white;
-        height: 50px;
-        width:120px;
-      }
-      #practice-explode-bomb {
-        background: black;
-        color: white;
-        height: 50px;
-        width:120px;
-      }
-      .explosion {
-        height:30px;
-        width:30px;
-        background: url("../images/explosion_120_x_120.png");
-      }
-      .practice-bomb {
-        height:64px;
-        width: 64px;
-        background: url("../images/explosion.png");
-      }
-      .hit{
-        background-color:red;
-      }
-      .nohit{
-        background-color:white;
-      }
-
-    </style>
+    <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <!-- <div class="missle"></div> -->
     <div class="traveling-missle"></div>
-    <!-- <div class="practice-bomb"></div> -->
-
-    <!-- <div id="practice-launch-missle">Practice Launch</div>
-    <div id="practice-explode-bomb">Practice Bomb Expldoe</div> -->
-
-
-    <h1>Battleship</h1>
-    <!-- <div id="launch-missle">Launch</div>
-    <button id="pop">Populate</button> -->
+    
+    <div id="main">
+        <div id="board1" class="center-block"></div>
+        <div id="boardDivider"></div>
+        <div id="board2" class="center-block"></div>
+    </div>
+    
     <div id="game-announcement"></div>
-
-    <div id="board1">
-
-    </div>
-    <div id="board2">
-
-    </div>
-
+  
     <script>
-    var socket = io();
-    $(function() {
-      var battleship = new App.Battleship(socket);
-      var battleship_ui = new App.BattleshipUI($('body'), battleship);
-    });
+      var socket = io();
+      var $windowWidth = $(window).width();
+      HEIGHT_TO_WIDTH_RATION = 2400/1917;
+      $(function() {
+        
+        $("#main").css({height: $windowWidth * HEIGHT_TO_WIDTH_RATION});
+        
+        var battleship = new App.Battleship(socket);
+        var battleship_ui = new App.BattleshipUI($('body'), battleship);
+      });
     </script>
       
   </body>

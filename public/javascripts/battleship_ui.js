@@ -44,30 +44,29 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       
       this.battleship.socket.on('notifySinglePlayer', function() {
         $("#game-announcement").html("only player here...waiting for next");
-      })
+      });
       
       this.battleship.socket.on('goTime', function() {
         $("#game-announcement").html("Game has officially started");
-      })
+      });
       
       this.battleship.socket.on('youSuck', function() {
         $("#game-announcement").html("hurry up already and place your ships!");
-      })
+      });
       
       this.battleship.socket.on('firstPlayer', function() {
         $("#game-announcement").html("You finished placing ships first: once your idiot partner catches up, you will drop first bomb");
-      })
+      });
       
       this.battleship.socket.on('yourTurn', function() {
         $("#game-announcement").html("Your Turn");
         battleshipUI.ableToFire = true;
         $("#board2 .tile").on("click", battleshipUI.handleShot.bind(battleshipUI));
-        // battleshipUI.battleship.handleTurnToggle.bind(battleshipUI);
-      })
+      });
       
       this.battleship.socket.on('notYourTurn', function() {
         $("#game-announcement").html("sorry dum dum, took you too long to place your ships, your opponent gets to go first.");
-      })
+      });
       
       this.battleship.socket.on('SHOT', function(coords) {   
         var gameLost = false;     
@@ -142,10 +141,16 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
           var row = [];
           for (var k = 0; k < 10; k++) {
             var div = document.createElement("div");
-            $(div).addClass("tile").addClass("blueTile");
-            $(div).attr('data-row', j);
-            $(div).attr('data-col', k);
-            row.push(div);
+            var childDiv = document.createElement("div");
+            var $div = $(div);
+            var $childDiv = $(childDiv);
+            
+            $div.append($childDiv);
+            $div.addClass("tile")
+            $childDiv.addClass("blueTile");
+            $div.attr('data-row', j);
+            $div.attr('data-col', k);
+            row.push($div);
           }
           if(i === 0){
             this.ourBoard.push(row);
