@@ -4,11 +4,9 @@
     <title>BattleShip</title>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
     <script src="socket.io/socket.io.js" type='text/javascript'></script>
-    <script src="javascripts/battleship.js"></script>
     <script src="javascripts/battleship_ui.js"></script>
     <script src="javascripts/battleship_missle_ui.js"></script>
     <script src="javascripts/ship.js"></script>
-    <script src="javascripts/game_states.js"></script>
     <link rel="stylesheet" href="css/main.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
   </head>
@@ -17,6 +15,8 @@
     
     <div id="backgroundImage"></div>
     <div id="main">
+      <h3>GAME INSTRUCTIONS:</h3>
+      <p id="game-announcement" class="center-block"></p>
       <div id="board1container">
         <h2>My Board</h2>
         <div id="board1" class="center-block">
@@ -41,8 +41,8 @@
         
         $("#backgroundImage").css({height: $windowWidth * HEIGHT_TO_WIDTH_RATION});
         
-        var battleship = new App.Battleship(socket);
-        var battleship_ui = new App.BattleshipUI($('body'), battleship);
+        // var battleship = new App.Battleship(socket);
+        var battleship_ui = new App.BattleshipUI({$root: $('body'), socket: socket});
       });
     </script>
       

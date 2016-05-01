@@ -7,10 +7,12 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
 (function (root) {
   var App = root.App = (root.App || {});
 
-  var BattleshipUI = App.BattleshipUI = function($root, battleship){
+  var BattleshipUI = App.BattleshipUI = function(options){
     
-    this.root = $root;
-    this.battleship = battleship;
+    this.$root = options.$root;
+    this.socket = options.socket;
+    this.missleUI = new BattleshipMissleUI();
+    
   
     this.ourBoard = [];
     this.oppBoard = [];
@@ -18,57 +20,66 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
     this.takenPositions = {};
     this.ableToFire = false;
     this.hitShipSegments = [];
-  
-    // this.gameState = new GameStates();
-    this.missleUI = new BattleshipMissleUI();
-  
-    // $("#pop").on("click", this.autopopulate.bind(this));
-//     $("#practice-launch-missle").on("click", this.missleUI.practiceLaunchMissle.bind(this));
-//
-//     $("#practice-explode-bomb").on("click", this.missleUI.practiceExplosion.bind(this));
-  
+    
     this.createGrids();
     this.displayGrids();
-    this.registerHandlers();
+    this.ships = this.createShips();
   };
 
   BattleshipUI.prototype = {
+    createShips: function(){
+        var ships = [];
+        var shipOne = new Ship({length:2});
+        ships.push(shipOne);
+        var shipTwo = new Ship({length:3});
+        ships.push(shipTwo);
+
+        var shipThree = new Ship({length:3});
+        ships.push(shipThree);
+
+        var shipFour = new Ship({length:4});
+        ships.push(shipFour);
+
+        var shipFive = new Ship({length:5});
+        ships.push(shipFive);
+        
+        return ships;
+    },
     registerHandlers: function(){
-      //var that = this;
       var battleshipUI = this;
       
-      this.battleship.socket.on('placeShips', function(payload) {
-        $("#game-announcement").html("place ships");
+      this.socket.on('placeShips', function(payload) {
+        $("#game-announcement").html("Place ships by clicking on tiles on 'My Board'.  Once you have finished placing ships, YOU MUST CLICK ON ONE MORE TILE ON YOUR BOARD to indicate completion of ship placement. ");
         $("#board1 .blueTile").on("click", battleshipUI.placeShips.bind(battleshipUI));
       });
       
-      this.battleship.socket.on('notifySinglePlayer', function() {
-        $("#game-announcement").html("only player here...waiting for next");
+      this.socket.on('notifySinglePlayer', function() {
+        $("#game-announcement").html("This version of Battleship requires two players.  Currently, you are the only person here.  If you are an employer testing out Brent Vale's game, you can simulate the game experience by opening up a new window and acting as the second player.  You will have to place both sets of ships to begin the game.");
       });
       
-      this.battleship.socket.on('goTime', function() {
+      this.socket.on('goTime', function() {
         $("#game-announcement").html("Game has officially started");
       });
       
-      this.battleship.socket.on('youSuck', function() {
-        $("#game-announcement").html("hurry up already and place your ships!");
+      this.socket.on('youSuck', function() {
+        $("#game-announcement").html("You opponent has finished placing their ships! Hurry up already and place your ships!");
       });
       
-      this.battleship.socket.on('firstPlayer', function() {
-        $("#game-announcement").html("You finished placing ships first: once your idiot partner catches up, you will drop first bomb");
+      this.socket.on('firstPlayer', function() {
+        $("#game-announcement").html("You finished placing ships first: once your partner catches up, you will drop first bomb.");
       });
       
-      this.battleship.socket.on('yourTurn', function() {
+      this.socket.on('yourTurn', function() {
         $("#game-announcement").html("Your Turn");
         battleshipUI.ableToFire = true;
         $("#board2 .tile").on("click", battleshipUI.handleShot.bind(battleshipUI));
       });
       
-      this.battleship.socket.on('notYourTurn', function() {
-        $("#game-announcement").html("sorry dum dum, took you too long to place your ships, your opponent gets to go first.");
+      this.socket.on('notYourTurn', function() {
+        $("#game-announcement").html("Dude, that took you forever to place your ships! Your opponent gets to go first.  Next time place your ships faster and you'll get to go first.");
       });
       
-      this.battleship.socket.on('SHOT', function(coords) {   
+      this.socket.on('SHOT', function(coords) {   
         var gameLost = false;     
         battleshipUI.ableToFire = true;
         var hit;
@@ -92,7 +103,7 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
         battleshipUI.battleship.socket.emit("SHOT_RESPONSE", {hit: hit, row: coords.row, col: coords.col, gameLost: gameLost});
       })
       
-      this.battleship.socket.on('makeNotTurn', function(params) {
+      this.socket.on('makeNotTurn', function(params) {
         $("#board2 .blueTile").off("click");
         battleshipUI.ableToFire = false;
         
@@ -108,7 +119,7 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
         }
       })
       
-      this.battleship.socket.on('GAME_OVER', function(object){
+      this.socket.on('GAME_OVER', function(object){
         var params = object[0];
         var gameOverResponse = object[1];
         var didWin = object[2];
@@ -161,60 +172,71 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       }
     },
     displayGrids: function () {
+      var $board1 = this.$root.find("#board1");
+      var $board2 = this.$root.find("#board2");
       for(var i = 0; i < this.ourBoard.length; i++){
         for(var j = 0; j < this.ourBoard[i].length; j++){
-          $(this.root).find("#board1").append(this.ourBoard[i][j]);
-          $(this.root).find("#board2").append(this.oppBoard[i][j]);
+          $board1.append(this.ourBoard[i][j]);
+          $board2.append(this.oppBoard[i][j]);
         }
       }
-      $("#board2 .blueTile").on("click", this.placeShips.bind(this));
+      this.registerHandlers();
     },
     placeShips: function(event){
-      $("#board1 .tile").off();
+      //turn listeners off during ship placement
+      
       if(this.shipCounter === 5){
-        $("#board2 .blueTile").off("click");
-        this.battleship.socket.emit("shipsPlaced");
+        this.socket.emit("shipsPlaced");
         return;
       }
-      var currentCoord = [$(event.currentTarget).data("row"),
-                          $(event.currentTarget).data("col") ];
-
-      var currentShip = this.battleship.shipsToPlace[this.shipCounter];
+      var currentCoord = [$(event.currentTarget.parentElement).data("row"),
+                          $(event.currentTarget.parentElement).data("col") ];
+                          
+      var currentShip = this.ships[this.shipCounter];
       currentShip.startCoord = currentCoord;
+
       var validCoords = this.possibleCoords(currentCoord, currentShip.length - 1);
+
       if(validCoords.length > 0){
-        $(event.currentTarget).removeClass("blueTile");
-        $(event.currentTarget).addClass("greenTile");
+        $(event.currentTarget).removeClass("blueTile").addClass("greenTile");
+        $("#board1 .blueTile").off();
       }else{
         $("#board1 .blueTile").on("click", this.placeShips.bind(this));
       }
+      
       for (var i = 0; i < validCoords.length; i++) {
-        var tempTile = this.ourBoard[validCoords[i][0]][validCoords[i][1]];
-        $(tempTile).removeClass("blueTile");
-        $(tempTile).off();
-        $(tempTile).addClass("redTile");
-        $(tempTile).on("click", this.placeNextShip.bind(this));
+        var $tempTile = $($(this.ourBoard[validCoords[i][0]][validCoords[i][1]]).children()[0]);
+        $tempTile.removeClass("blueTile");
+        $tempTile.off();
+        $tempTile.addClass("redTile");
+        $tempTile.on("click", this.placeNextShip.bind(this));
       }
     },
     placeNextShip: function(event){
-      var placementCoord = [$(event.currentTarget).data("row"),
-                          $(event.currentTarget).data("col") ];
-      var placements = $(this.root).find(".redTile");
-      var targetShip = this.battleship.shipsToPlace[this.shipCounter];
-      targetShip.endCoord = placementCoord;
-      targetShip.detectCoords();
-      this.shipCounter += 1;
+      var placementCoord = [$(event.currentTarget.parentElement).data("row"),
+                          $(event.currentTarget.parentElement).data("col") ];
+      //remove red color from tiles, turn off listeners
+      var placements = this.$root.find(".redTile");
       placements.removeClass("redTile");
       placements.addClass("blueTile");
       placements.off();
+      
+      //update coords once ship has been placed
+      var targetShip = this.ships[this.shipCounter];
+      targetShip.endCoord = placementCoord;
+      targetShip.detectCoords();
+      
+      
       for(var i = 0; i < targetShip.segments.length; i ++) {
         var tempCoords = targetShip.segments[i];
-        var tempTile = this.ourBoard[tempCoords[0]][tempCoords[1]];
         this.takenPositions[tempCoords] = true;
-        $(tempTile).removeClass("blueTile");
-        $(tempTile).addClass("greenTile");
+        
+        var $tempTile = $($(this.ourBoard[tempCoords[0]][tempCoords[1]]).children()[0]);
+        $tempTile.removeClass("blueTile");
+        $tempTile.addClass("greenTile");
       }
 
+      this.shipCounter += 1;
       $("#board1 .blueTile").on("click", this.placeShips.bind(this));
 
     },
@@ -291,7 +313,7 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       // alert("DESTROYED!: " + oppCoord);
     },
     autopopulate: function(){
-      var ships = this.battleship.shipsToPlace;
+      var ships = this.socket.shipsToPlace;
       for (var i = 0; i < 5; i++) {
 
         for (var j = 0; j < ships[i].length; j++) {
