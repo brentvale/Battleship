@@ -65,7 +65,7 @@ BattleshipMissleUI.prototype = {
       clearInterval(animationInterval);
       launchedMissle.css({"top": 300, "left": 10});
       callback();
-    },TOTAL_ANI_TIME * 6); // multiple of animation count
+    },TOTAL_ANI_TIME * 3); // multiple of animation count
   },
   
   loopExplosion: function(params, hitSquare, message){
@@ -78,7 +78,7 @@ BattleshipMissleUI.prototype = {
     
     var explosionInterval = window.setInterval(function(){
       //30 is the width of each image in the 120x120 16 grid sprite
-      var position = (colCount*30*-1) + "px " + (rowCount*30*-1) + "px";
+      var position = (colCount*25*-1) + "% " + (rowCount*25*-1) + "%";
       $hitSquare.css("background-position", position);
       colCount += 1;
       if(colCount >= 4){ //manual setting of col width: bomb image is 4 x 4

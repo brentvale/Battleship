@@ -54,7 +54,6 @@ p{
 #board1, #board2 {
   width: 90%;
 }
-
 .tile{
   height:50px;
   width:10%;
@@ -116,8 +115,6 @@ p{
   width:120px;
 }
 .explosion {
-  height:30px;
-  width:30px;
   background: url("../images/explosion_120_x_120.png");
 }
 .practice-bomb {
