@@ -10,14 +10,25 @@
     <script src="javascripts/ship.js"></script>
     <script src="javascripts/game_states.js"></script>
     <link rel="stylesheet" href="css/main.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <div class="traveling-missle"></div>
     
+    <div id="backgroundImage"></div>
     <div id="main">
-        <div id="board1" class="center-block"></div>
-        <div id="boardDivider"></div>
-        <div id="board2" class="center-block"></div>
+      <div id="board1container">
+        <h2>My Board</h2>
+        <div id="board1" class="center-block">
+          
+        </div>
+      </div>
+      <div id="board2container">
+        <h2>Opponent Board</h2>
+        <div id="board2" class="center-block">
+        
+        </div>
+      </div>
     </div>
     
     <div id="game-announcement"></div>
@@ -25,10 +36,10 @@
     <script>
       var socket = io();
       var $windowWidth = $(window).width();
-      HEIGHT_TO_WIDTH_RATION = 2400/1917;
+      HEIGHT_TO_WIDTH_RATION = 1124/1920;
       $(function() {
         
-        $("#main").css({height: $windowWidth * HEIGHT_TO_WIDTH_RATION});
+        $("#backgroundImage").css({height: $windowWidth * HEIGHT_TO_WIDTH_RATION});
         
         var battleship = new App.Battleship(socket);
         var battleship_ui = new App.BattleshipUI($('body'), battleship);
