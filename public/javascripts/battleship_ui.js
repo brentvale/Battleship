@@ -136,17 +136,20 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       })
     },
     handleShot: function(e){
-      e.preventDefault();
-      var rowCord = parseInt(e.currentTarget.dataset.row);
-      var colCord = parseInt(e.currentTarget.dataset.col);
-      var coords = {row: rowCord, col: colCord};
+      if(this.ableToFire){
+        e.preventDefault();
+        this.ableToFire = false;
+        var rowCord = parseInt(e.currentTarget.dataset.row);
+        var colCord = parseInt(e.currentTarget.dataset.col);
+        var coords = {row: rowCord, col: colCord};
       
-      $("#board2 .blueTile").off("click");
-      $("#game-announcement").html("FIRING...");
-      var battleshipUI = this;
-      battleshipUI.missleUI.launchMissle(function() {
-        battleshipUI.socket.emit("HANDLE_SHOT_RESPONSE", coords);
-      })
+        $("#board2 .blueTile").off("click");
+        $("#game-announcement").html("FIRING...");
+        var battleshipUI = this;
+        battleshipUI.missleUI.launchMissle(function() {
+          battleshipUI.socket.emit("HANDLE_SHOT_RESPONSE", coords);
+        });
+      }
     },
     createGrids: function(){
       for (var i = 0; i < 2; i++) {
