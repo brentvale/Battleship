@@ -81,9 +81,12 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       
       this.socket.on('SHOT', function(coords) {   
         var gameLost = false;     
-        battleshipUI.ableToFire = true;
         var hit;
         var takenCoords = [coords.row, coords.col];
+        var hitSquare = $(battleshipUI.ourBoard[coords.row][coords.col].children()[0]);
+        
+        battleshipUI.ableToFire = true;
+        
         if(battleshipUI.takenPositions[takenCoords]){
           //check if game has been lost
           battleshipUI.hitShipSegments.push(takenCoords);
@@ -92,29 +95,25 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
             gameLost = true;
           }
           hit = true;
-          var hitSquare = $(battleshipUI.ourBoard[coords.row][coords.col].children()[0]);
           battleshipUI.missleUI.loopExplosion(coords, hitSquare)
         } else {
           hit = false;
-          var unHitSquare = $(battleshipUI.ourBoard[coords.row][coords.col].children()[0]);
-          $(unHitSquare).addClass("nohit");
+          $(hitSquare).addClass("nohit");
         }
         
         battleshipUI.socket.emit("SHOT_RESPONSE", {hit: hit, row: coords.row, col: coords.col, gameLost: gameLost});
       })
       
       this.socket.on('makeNotTurn', function(params) {
+        var hitSquare = $(battleshipUI.oppBoard[params.row][params.col].children()[0]);
         $("#board2 .blueTile").off("click");
         battleshipUI.ableToFire = false;
         
         if(params.hit){
-          var hitSquare = $(battleshipUI.oppBoard[params.row][params.col].children()[0]);
-          //
           var message = "HIT!!!!!" + '<br>' + "Waiting for opponent's shot";
           battleshipUI.missleUI.loopExplosion(params, hitSquare, message);
         } else {
-          var unHitSquare = $(battleshipUI.oppBoard[params.row][params.col].children()[0]);
-          $(unHitSquare).addClass("nohit");
+          $(hitSquare).addClass("nohit");
           $("#game-announcement").html("swing and a miss..." + '<br>');
           $("#game-announcement").append("Waiting for opponent's shot");
         }
@@ -127,7 +126,7 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
         
         $("#board2 .blueTile").off("click");
         if(didWin){
-          var hitSquare = battleshipUI.oppBoard[params.row][params.col];
+          var hitSquare = $(battleshipUI.oppBoard[params.row][params.col].children()[0]);
           battleshipUI.missleUI.loopExplosion(params, hitSquare)
         } 
         battleshipUI.ableToFire = false;
@@ -313,13 +312,10 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
     shoot: function(event){
       var oppCoord = [$(event.currentTarget).data("row"),
                           $(event.currentTarget).data("col") ];
-      //if the coords lead to a hit, explode bomb
-      //using same Interval as in 
       var that = this;
       window.setTimeout(function(){
         that.missleUI.loopExplosion(oppCoord)
       },TOTAL_ANI_TIME * 6); // multiple of animation count
-      // alert("DESTROYED!: " + oppCoord);
     },
     autopopulate: function(){
       var ships = this.socket.shipsToPlace;
