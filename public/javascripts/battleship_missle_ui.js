@@ -26,7 +26,8 @@ BattleshipMissleUI.prototype = {
     //get coordinates of bombedTile
     // var bombSpot = event.currentTarget.getBoundingClientRect();
     //launchedMissle start coords are top: 445px; left: 10px; 
-    var launchedMissle = $(".traveling-missle");
+    var $launchedMissle = $(".traveling-missle");
+    $launchedMissle.css({display: "block"});
     var bombY = 300
     var bombX = 800
   
@@ -45,7 +46,7 @@ BattleshipMissleUI.prototype = {
       aniCount += 1;
       if(aniCount % 6 === 0){
         var position = (colCount*SPRITE_IMAGE_LENGTH*-1) + "px " + (rowCount*SPRITE_IMAGE_LENGTH*-1) + "px";
-        launchedMissle.css("background-position", position);
+        $launchedMissle.css("background-position", position);
         colCount += 1;
         if(colCount >= SPRITE_IMAGE_COLS){
           rowCount += 1;
@@ -53,17 +54,17 @@ BattleshipMissleUI.prototype = {
         }
       }
     
-      var currentTop = launchedMissle.css("top");
-      var currentLeft = launchedMissle.css("left");
+      var currentTop = $launchedMissle.css("top");
+      var currentLeft = $launchedMissle.css("left");
       var newTop = parseInt(currentTop.slice(0,-2)) + (delY);
       var newLeft = parseInt(currentLeft.slice(0,-2)) + (delX);
-      launchedMissle.css({"top": newTop, "left": newLeft});
+      $launchedMissle.css({"top": newTop, "left": newLeft});
     
     }, MS_FRAME);
     var that = this;
     window.setTimeout(function() {
       clearInterval(animationInterval);
-      launchedMissle.css({"top": 300, "left": 10});
+      $launchedMissle.css({top: "1000px", left: "0px", display: "none"});
       callback();
     },TOTAL_ANI_TIME * 3); // multiple of animation count
   },
