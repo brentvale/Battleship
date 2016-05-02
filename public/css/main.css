@@ -22,20 +22,6 @@ p{
   margin-left:auto;
   margin-right:auto;
 }
-.missle {
-  width: 64px;
-  height: 64px;
-  background: url("../images/missle_hang_sequence_512.png"); /*for practice launch*/
-}
-.traveling-missle {
-  position: absolute;
-  z-index: 1;
-  height: 64px;
-  width: 64px;
-  background: url("../images/missle_hang_sequence_512.png");
-  top: 280px;
-  left: 0px;
-}
 #backgroundImage{
   background-image: url("../images/Battleship_Background_Cover.jpg");
   background-size:contain;
@@ -84,11 +70,6 @@ p{
 .greenTile{
   background:green;
 }
-.gridEl{
-  height: 30px;
-  width: 30px;
-  margin-top: 10px;
-}
 #top{
   height:500px;
   background-color:black;
@@ -108,6 +89,20 @@ p{
   height: 50px;
   width:120px;
 }
+.missle {
+  width: 64px;
+  height: 64px;
+  background: url("../images/missle_hang_sequence_512.png"); /*for practice launch*/
+}
+.traveling-missle {
+  position: absolute;
+  z-index: 1;
+  height: 64px;
+  width: 64px;
+  background: url("../images/missle_hang_sequence_512.png");
+  top: 280px;
+  left: 0px;
+}
 #practice-explode-bomb {
   background: black;
   color: white;
@@ -116,11 +111,7 @@ p{
 }
 .explosion {
   background: url("../images/explosion_120_x_120.png");
-}
-.practice-bomb {
-  height:64px;
-  width: 64px;
-  background: url("../images/explosion.png");
+  background-size:400%;
 }
 .hit{
   background-color:red;

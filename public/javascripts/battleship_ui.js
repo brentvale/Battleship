@@ -136,13 +136,18 @@ var TOTAL_ANI_TIME = (SPRITE_IMAGE_ROWS * SPRITE_IMAGE_COLS) * MS_FRAME;
       })
     },
     handleShot: function(e){
+      if($(e.currentTarget.children[0]).hasClass("nohit") || $(e.currentTarget.children[0]).hasClass("hit")){
+        alert("You've already fired on that tile, select another tile");
+        return;
+      }
       if(this.ableToFire){
         e.preventDefault();
         this.ableToFire = false;
+        
         var rowCord = parseInt(e.currentTarget.dataset.row);
         var colCord = parseInt(e.currentTarget.dataset.col);
         var coords = {row: rowCord, col: colCord};
-      
+        //if user has already fired on certain spot, don't allow them to fire again
         $("#board2 .blueTile").off("click");
         $("#game-announcement").html("FIRING...");
         var battleshipUI = this;

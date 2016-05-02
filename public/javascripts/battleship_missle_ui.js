@@ -73,12 +73,13 @@ BattleshipMissleUI.prototype = {
     //params => {hit: true, row: row, col: col}
     var $hitSquare = $(hitSquare);
     $hitSquare.addClass("explosion");
+    
     var rowCount = 0;
     var colCount = 0;
     
     var explosionInterval = window.setInterval(function(){
       //30 is the width of each image in the 120x120 16 grid sprite
-      var position = (colCount*25*-1) + "% " + (rowCount*25*-1) + "%";
+      var position = (colCount*33*-1) + "% " + (rowCount*33*-1) + "%";
       $hitSquare.css("background-position", position);
       colCount += 1;
       if(colCount >= 4){ //manual setting of col width: bomb image is 4 x 4
